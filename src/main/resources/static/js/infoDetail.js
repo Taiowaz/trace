@@ -7,25 +7,28 @@ $(function () {
         type: "get",
         dataType: "json",
         success: function (info) {
-            var list = "<div class=\"row mb-4\">";
-            list+="<h2 class=\"col-12 tm-text-primary\">";
-            list+=info.infoTitle;
-            list+="</h2></div>";
+            var title = "<h2 class=\"col-12 tm-text-primary\">";
+            title += info.infoTitle;
+            title += "</h2>";
+            $("#info-title-container").append(title);
 
-            list += "<h2 align='center'>" + info.infoTitle + "</h2><br><div style='position: absolute;text-align:left;width: 70%;height: auto;padding: 5px;left: 15%;'>"
+            var list = "";
+            // list += " <div class=\"col-xl-8 col-lg-7 col-md-6 col-sm-12\"";
+            // list += "style=\"text-indent:2em;font-size: large;line-height: 2em;display: flex;flex-direction: column; align-items: center;\">";
             var img = info.imgList;
             var para = info.infoParaList;
             for (i = 0; i < para.length; i++) {
-                list += "<span style='width:100%;height:auto;'>&emsp;&emsp;" + para[i].infoPara + "</span><br>";
+                list += "<div>" + para[i].infoPara + "</div>";
                 for (j = 0; j < img.length; j++) {
                     if (img[j].serialNum == para[i].infoParaId) {
-                        list += "<span style='text-align: center;display:block;'><img style='max-width:400px;max-height:400px' src='.." + img[j].imgPath + "'alt='图片'></span><br>";
+                        list += "<div style=\"text-indent: 0%;\">";
+                        list += " <img src=\"" + img[j].imgPath + "\"style=\"width: auto; max-width: 100%;\">";
+                        list += " </div>";
+                        break;
                     }
                 }
             }
-            list += "</div>"
-            $("#content").append(list);
-            $("#loading").toggle();
+            $("#info-cont-container").append(list);
         }
     });
 })
