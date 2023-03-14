@@ -21,7 +21,8 @@ public class ChatGptController {
         String response = gptApi.getGptResult();
         //将结果翻译为中文
         String transResponse = transApi.getTransResult("auto","zh", response);
-        return transResponse;
+
+        return transResponse.replace("\\n","");
     }
 
     //!!!测试

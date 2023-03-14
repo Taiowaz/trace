@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class GptApi {
     private static final String GPT_API_HOST = "https://chat.canoe0.top/v1/chat/completions";
-    private static final String API_KEY = "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";
+    private static final String API_KEY = "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";
     private static final float temperature = 0.9F;
     //生成文本的长度
     private static final int maxTokens = 4096;
@@ -28,19 +28,6 @@ public class GptApi {
         this.prompt = prompt;
     }
 
-//！！！原版失效
-//    public Map getGptResult() throws Exception {
-//        PostRequest postRequest = new PostRequest(GPT_API_HOST, null, API_KEY);
-//        Map responseMap = postRequest.sendPostRequest(buildParams());
-//        JSONObject responseJSON = JSONObject.parseObject((String) responseMap.get("data"));
-//        //获取包含结果的字段
-//        String choices = responseJSON.getString("choices");
-//        //去除中括号
-//        JSONObject resultProcess = JSONObject.parseObject(choices.substring(1, choices.length() - 1));
-//
-//        responseMap.replace("data", resultProcess.getString("text"));
-//        return responseMap;
-//    }
 
     //！！新版备用方案
     public String getGptResult() throws Exception {
@@ -68,6 +55,7 @@ public class GptApi {
         //对回复进行整理
         String responseString = EntityUtils.toString(response.getEntity());
         JSONObject responseJson = JSONObject.parseObject(responseString);
+        System.out.println(responseJson);
         List<JSONObject> choicesList = responseJson.getJSONArray("choices");
         JSONObject choicesJson = choicesList.get(0);
         JSONObject resMsgJson = choicesJson.getJSONObject("message");

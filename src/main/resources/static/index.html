@@ -7,6 +7,10 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="fontawesome/css/all.min.css">
         <link rel="stylesheet" href="css/templatemo-style.css">
+        <link rel="stylesheet" href="css/head.css">
+        <script src="./js/jquery-3.6.1.min.js"></script>
+        <script src="./js/head.js"></script>
+        <script src="./js/goto.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg">
@@ -26,8 +30,9 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-2 active" aria-current="page" href="index.html">首页</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-1" href="infoclass.html">信息分类</a>
+                        <li class="nav-item" id="list">
+                            <a class="nav-link nav-link-1" aria-current="page" href="infoclass.html">信息分类</a>
+                            <div id="D-list" ><p id="E-list"><button>经济板块</button></p><p id="C-list"><button>文化板块</button></p><p id="L-list"><button>生活板块</button></p></div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-4" href="VRList.html">VR游览</a>
@@ -40,10 +45,9 @@
             </div>
         </nav>
 
-        <div class="tm-hero d-flex justify-content-center align-items-center" id="tm-video-container">
-            <video autoplay muted loop id="tm-video">
-                <source src="video/hero.mp4" type="video/mp4">
-            </video>
+        <div class="tm-hero d-flex justify-content-center align-items-center" style="height:700px">
+            <iframe src="./map/index.html" height="100%" width="100%">
+            </iframe>
         </div>
 
         <!--信息流-->
@@ -57,22 +61,6 @@
 
             <!--信息流主体-->
             <div class="row tm-mb-90 tm-gallery" id="info-list">
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
-                    <!--动画-->
-                    <figure class="effect-ming tm-video-item">
-                        <!--图片-->
-                        <img src="img/img-01.jpg" alt="Image" class="img-fluid">
-                        <!--动画-->
-                        <figcaption class="d-flex align-items-center justify-content-center">
-                            <h2>寻迹京城</h2>
-                            <a href="video-detail.html">View more</a>
-                        </figcaption>
-                    </figure>
-                    <div class="d-flex justify-content-between tm-text-gray">
-                        <span>24 Oct 2020</span>
-                        <span>10,460 views</span>
-                    </div>
-                </div>
             </div> <!-- row -->
         </div> <!-- container-fluid, tm-container-content -->
 
