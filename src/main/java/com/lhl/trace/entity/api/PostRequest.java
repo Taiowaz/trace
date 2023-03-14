@@ -29,13 +29,7 @@ public class PostRequest {
         connection.setDoOutput(true);//是否向connection输出，默认false
         connection.setDoInput(true);//是否从connection读入，默认true
 
-        if (appid == null) {
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Authorization", "Bearer " + apiKey);
-        } else {
-            //a=1&b=2形式
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        }
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         //构建请求体
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
         outputStream.writeBytes(requestBody);

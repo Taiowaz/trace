@@ -1,6 +1,5 @@
 package com.lhl.trace.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.lhl.trace.entity.api.GptApi;
 import com.lhl.trace.entity.api.TransApi;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,16 +15,13 @@ public class ChatGptController {
     public String chatGpt(@RequestParam("prompt") String prompt) throws Exception{
         //chatgpt不支持中文，需要进行翻译
         TransApi transApi = new TransApi();
+        System.out.println("ChatController19-prompt:"+prompt);
         GptApi gptApi = new GptApi(transApi.getTransResult("auto","en",prompt));
-        //获取结果map
-        Map responseMap = gptApi.getGptResult();
+        //获取英语回复
+        String response = gptApi.getGptResult();
         //将结果翻译为中文
-        String transResult = transApi.getTransResult("auto","zh", (String) responseMap.get("data"));
-
-        responseMap.replace("data",transResult.replace("\\n","\n"));
-
-        JSONObject responseJson = new JSONObject(responseMap);
-        return String.valueOf(responseJson);
+        String transResponse = transApi.getTransResult("auto","zh", response);
+        return transResponse;
     }
 
     //!!!测试

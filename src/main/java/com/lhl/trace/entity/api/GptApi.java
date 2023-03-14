@@ -1,19 +1,26 @@
 package com.lhl.trace.entity.api;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class GptApi {
-    private static final String GPT_API_HOST = "https://api.openai.com/v1/completions";
-    private static final String API_KEY = "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";
-    //error.html测试
-    //private static final String API_KEY = "sk-E8MLru1FWvgqjFrrnMPNT3BlbkFJg8JZpX6auxsdtuKQ88";
+    private static final String GPT_API_HOST = "https://chat.canoe0.top/v1/chat/completions";
+    private static final String API_KEY = "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";
     private static final float temperature = 0.9F;
     //生成文本的长度
-    private static final int maxTokens = 2048;
+    private static final int maxTokens = 4096;
     //模型类型
-    private static final String modelEngine = "text-davinci-003";
+    private static final String model = "gpt-3.5-turbo";
 
     private String prompt;
 
@@ -21,24 +28,51 @@ public class GptApi {
         this.prompt = prompt;
     }
 
-    public Map getGptResult() throws Exception {
-        PostRequest postRequest = new PostRequest(GPT_API_HOST, null, API_KEY);
-        Map responseMap = postRequest.sendPostRequest(buildParams());
-        JSONObject responseJSON = JSONObject.parseObject((String) responseMap.get("data"));
-        //获取包含结果的字段
-        String choices = responseJSON.getString("choices");
-        //去除中括号
-        JSONObject resultProcess = JSONObject.parseObject(choices.substring(1, choices.length() - 1));
+//！！！原版失效
+//    public Map getGptResult() throws Exception {
+//        PostRequest postRequest = new PostRequest(GPT_API_HOST, null, API_KEY);
+//        Map responseMap = postRequest.sendPostRequest(buildParams());
+//        JSONObject responseJSON = JSONObject.parseObject((String) responseMap.get("data"));
+//        //获取包含结果的字段
+//        String choices = responseJSON.getString("choices");
+//        //去除中括号
+//        JSONObject resultProcess = JSONObject.parseObject(choices.substring(1, choices.length() - 1));
+//
+//        responseMap.replace("data", resultProcess.getString("text"));
+//        return responseMap;
+//    }
 
-        responseMap.replace("data", resultProcess.getString("text"));
-        return responseMap;
-    }
+    //！！新版备用方案
+    public String getGptResult() throws Exception {
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        //定义post请求
+        HttpPost request = new HttpPost(GPT_API_HOST);
+        request.addHeader("Content-Type", "application/json");
+        request.addHeader("Authorization", "Bearer " + API_KEY);
 
-    public String buildParams() {
-        String requestBody = String.format("{\"model\":\"%s\",\"prompt\":\"%s\",\"max_tokens\":%d,\"temperature\":%f}",
-                modelEngine, prompt, maxTokens, temperature
-        );
-        return requestBody;
+        //定义一个JSON对象将参数放入对象中
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("model", model);
+        JSONObject msgJson = new JSONObject();
+        msgJson.put("role", "user");
+        msgJson.put("content", prompt);
+        List<JSONObject> msgList = new ArrayList<>();
+        msgList.add(msgJson);
+        requestBody.put("messages", msgList);
+        //定义请求体
+        StringEntity requestEntity = new StringEntity(requestBody.toString());
+        //设置请求体
+        request.setEntity(requestEntity);
+        //发送请求
+        HttpResponse response = httpClient.execute(request);
+        //对回复进行整理
+        String responseString = EntityUtils.toString(response.getEntity());
+        JSONObject responseJson = JSONObject.parseObject(responseString);
+        List<JSONObject> choicesList = responseJson.getJSONArray("choices");
+        JSONObject choicesJson = choicesList.get(0);
+        JSONObject resMsgJson = choicesJson.getJSONObject("message");
+        String resContent = resMsgJson.getString("content");
+        return resContent;
     }
 
 }
